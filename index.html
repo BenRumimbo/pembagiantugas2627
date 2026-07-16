@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembagian Tugas Guru — UPTD SMAN 2 Majene</title>
+<style>
+  :root{
+    --navy-950:#0b1f38;
+    --navy-900:#12294a;
+    --navy-800:#1b3a5c;
+    --navy-700:#254a72;
+    --gold-500:#c9a227;
+    --gold-400:#dab84a;
+    --paper:#f6f4ee;
+    --paper-2:#ffffff;
+    --ink:#1c2430;
+    --ink-soft:#5b6472;
+    --line:#e1ddd0;
+    --ok-bg:#eef4ec;
+    --ok-ink:#3c6b3f;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Segoe UI", ui-sans-serif, system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    min-height:100vh;
+    line-height:1.5;
+  }
+
+  /* HEADER */
+  header.site{
+    background:
+      linear-gradient(180deg, var(--navy-950), var(--navy-800) 85%);
+    color:#fff;
+    padding:36px 20px 46px;
+    position:relative;
+    overflow:hidden;
+  }
+  header.site::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0;
+    height:5px;
+    background:linear-gradient(90deg, var(--gold-500), var(--gold-400) 40%, var(--gold-500));
+  }
+  .header-inner{
+    max-width:760px;
+    margin:0 auto;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .school-logo{
+    width:64px;
+    height:64px;
+    object-fit:contain;
+    margin-bottom:14px;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold-400);
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .eyebrow::before, .eyebrow::after{
+    content:"";
+    width:22px; height:1px;
+    background:var(--gold-400);
+    opacity:.7;
+  }
+  h1.site-title{
+    margin:0 0 8px;
+    font-size:clamp(22px, 4vw, 30px);
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+  p.site-sub{
+    margin:0;
+    color:#c7d2e3;
+    font-size:14.5px;
+  }
+
+  /* MAIN */
+  main{
+    max-width:720px;
+    margin:0 auto;
+    padding:0 20px 80px;
+  }
+
+  .search-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px;
+    margin-top:-28px;
+    box-shadow:0 18px 40px -22px rgba(11,31,56,.35);
+    position:relative;
+    z-index:5;
+  }
+  .search-label{
+    display:block;
+    font-size:12.5px;
+    font-weight:600;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .search-wrap{
+    position:relative;
+  }
+  .search-wrap svg{
+    position:absolute;
+    left:14px; top:50%;
+    transform:translateY(-50%);
+    width:18px; height:18px;
+    color:var(--ink-soft);
+    pointer-events:none;
+  }
+  input#searchInput{
+    width:100%;
+    padding:14px 16px 14px 42px;
+    font-size:16px;
+    border:1.5px solid var(--line);
+    border-radius:10px;
+    background:var(--paper);
+    color:var(--ink);
+    outline:none;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input#searchInput:focus{
+    border-color:var(--navy-700);
+    box-shadow:0 0 0 3px rgba(27,58,92,.12);
+    background:#fff;
+  }
+  .hint{
+    margin-top:8px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+
+  .suggestions{
+    margin-top:2px;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid transparent;
+  }
+  .suggestions.has-items{
+    border-color:var(--line);
+    background:#fff;
+    box-shadow:0 12px 24px -18px rgba(11,31,56,.4);
+  }
+  .sugg-item{
+    padding:11px 16px;
+    cursor:pointer;
+    font-size:14.5px;
+    border-bottom:1px solid var(--line);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+  }
+  .sugg-item:last-child{border-bottom:none;}
+  .sugg-item:hover, .sugg-item.active{
+    background:var(--paper);
+  }
+  .sugg-item b{color:var(--navy-800); font-weight:700;}
+  .sugg-meta{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  .empty-state{
+    text-align:center;
+    padding:38px 10px 10px;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+  .empty-state .big{
+    font-size:34px;
+    margin-bottom:8px;
+  }
+
+  /* RESULT CARD */
+  #result{
+    margin-top:22px;
+  }
+  .teacher-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    animation:fadeUp .25s ease;
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .tc-head{
+    background:var(--navy-900);
+    color:#fff;
+    padding:20px 22px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .tc-name{
+    font-size:19px;
+    font-weight:700;
+    margin:0 0 4px;
+  }
+  .tc-code{
+    font-size:12.5px;
+    color:var(--gold-400);
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+  .tc-jam{
+    text-align:right;
+    flex-shrink:0;
+  }
+  .tc-jam .n{
+    font-size:22px;
+    font-weight:700;
+    color:#fff;
+    line-height:1;
+  }
+  .tc-jam .l{
+    font-size:11px;
+    color:#c7d2e3;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    margin-top:2px;
+  }
+
+  .tc-body{
+    padding:20px 22px 22px;
+  }
+
+  .section-title{
+    font-size:12.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-title::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+
+  .duty-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-bottom:24px;
+  }
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:7px 12px;
+    border-radius:999px;
+    font-size:13px;
+    font-weight:600;
+    border:1px solid transparent;
+  }
+  .badge.wali{
+    background:var(--ok-bg);
+    color:var(--ok-ink);
+    border-color:#cfe2cc;
+  }
+  .badge.wakasek{
+    background:#fbf1de;
+    color:#8a6a1a;
+    border-color:#f0dcae;
+  }
+  .badge.lab{
+    background:#eaf1f8;
+    color:#2a5a86;
+    border-color:#cfe0ee;
+  }
+  .badge.perpus{
+    background:#f3ecf7;
+    color:#6b3f8c;
+    border-color:#e2cdee;
+  }
+  .badge.none{
+    background:var(--paper);
+    color:var(--ink-soft);
+    border-color:var(--line);
+  }
+
+  .mapel-block{
+    margin-bottom:18px;
+    padding-bottom:18px;
+    border-bottom:1px dashed var(--line);
+  }
+  .mapel-block:last-child{
+    border-bottom:none;
+    margin-bottom:0;
+    padding-bottom:0;
+  }
+  .mapel-name{
+    font-size:15px;
+    font-weight:700;
+    color:var(--navy-800);
+    margin:0 0 10px;
+  }
+  .kelas-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+  }
+  .chip{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    font-size:13px;
+    color:var(--ink);
+    display:inline-flex;
+    align-items:baseline;
+    gap:5px;
+  }
+  .chip .jam{
+    font-size:11px;
+    color:var(--ink-soft);
+    font-weight:600;
+  }
+  .chip.peminatan{
+    background:#fdfaf1;
+    border-color:#eee0b8;
+  }
+
+  .total-summary{
+    margin-top:22px;
+    padding-top:24px;
+    border-top:2px solid var(--navy-900);
+    text-align:center;
+  }
+  .total-summary .label{
+    font-size:12.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .total-summary .label small{
+    display:block;
+    font-size:11px;
+    font-weight:500;
+    text-transform:none;
+    letter-spacing:0;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+  .total-summary .value{
+    font-size:56px;
+    font-weight:800;
+    line-height:1;
+    color:var(--navy-900);
+    letter-spacing:-.01em;
+  }
+  .total-summary .value span{
+    font-size:20px;
+    font-weight:700;
+    color:var(--gold-500);
+    margin-left:6px;
+  }
+
+  /* TABS */
+  .tabs{
+    max-width:720px;
+    margin:0 auto;
+    padding:0 20px;
+    position:relative;
+    z-index:6;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:-28px;
+  }
+  .tab-btn{
+    flex:1;
+    max-width:260px;
+    padding:13px 18px;
+    border:1px solid var(--line);
+    background:var(--paper-2);
+    color:var(--ink-soft);
+    font-size:14px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow:0 18px 40px -26px rgba(11,31,56,.35);
+    transition:background .15s, color .15s;
+  }
+  .tab-btn:first-child{border-radius:12px 0 0 12px; border-right:none;}
+  .tab-btn:last-child{border-radius:0 12px 12px 0;}
+  .tab-btn.active{
+    background:var(--navy-900);
+    color:#fff;
+    border-color:var(--navy-900);
+  }
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  /* MAPEL MATRIX */
+  .mapel-select-wrap{
+    position:relative;
+  }
+  .mapel-chip-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+  }
+  .mapel-pick{
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--paper);
+    font-size:13px;
+    font-weight:600;
+    color:var(--navy-800);
+    cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s;
+  }
+  .mapel-pick:hover{
+    border-color:var(--navy-700);
+  }
+  .mapel-pick.active{
+    background:var(--navy-900);
+    color:#fff;
+    border-color:var(--navy-900);
+  }
+
+  .matrix-card{
+    background:var(--paper-2);
+    border:1px solid var(--line);
+    border-radius:14px;
+    overflow:hidden;
+    margin-top:22px;
+    animation:fadeUp .25s ease;
+  }
+  .matrix-head{
+    background:var(--navy-900);
+    color:#fff;
+    padding:20px 22px;
+  }
+  .matrix-head .mm-title{
+    font-size:19px;
+    font-weight:700;
+    margin:0 0 4px;
+  }
+  .matrix-head .mm-sub{
+    font-size:12.5px;
+    color:#c7d2e3;
+  }
+  .matrix-body{
+    padding:20px 22px 22px;
+  }
+  .tingkat-group{
+    margin-bottom:20px;
+  }
+  .tingkat-group:last-child{margin-bottom:0;}
+  .tingkat-label{
+    font-size:12.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .tingkat-label::after{
+    content:"";
+    flex:1;
+    height:1px;
+    background:var(--line);
+  }
+  .kelas-guru-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));
+    gap:10px;
+  }
+  .kg-row{
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 12px;
+    background:var(--paper);
+  }
+  .kg-row.peminatan{
+    background:#fdfaf1;
+    border-color:#eee0b8;
+  }
+  .kg-row .kg-kelas{
+    font-size:12px;
+    font-weight:700;
+    color:var(--navy-800);
+    text-transform:uppercase;
+    letter-spacing:.03em;
+  }
+  .kg-row .kg-guru{
+    font-size:13.5px;
+    color:var(--ink);
+    margin-top:3px;
+  }
+  .kg-row .kg-jam{
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:2px;
+  }
+
+  footer.site{
+    text-align:center;
+    padding:26px 20px 40px;
+    color:var(--ink-soft);
+    font-size:12.5px;
+  }
+
+  @media (max-width:480px){
+    .tc-head{flex-direction:column;}
+    .tc-jam{text-align:left;}
+  }
+
+  /* MOBILE REFINEMENTS */
+  @media (max-width:600px){
+    header.site{padding:28px 16px 40px;}
+    .school-logo{width:52px; height:52px; margin-bottom:10px;}
+    h1.site-title{font-size:20px;}
+    p.site-sub{font-size:13px;}
+
+    main{padding:0 14px 60px;}
+    .tabs{padding:0 14px; margin-top:-24px; gap:6px;}
+    .tab-btn{padding:12px 10px; font-size:12.5px; max-width:none;}
+
+    .search-card{padding:16px; border-radius:12px;}
+    input#searchInput{font-size:16px; padding:12px 14px 12px 40px;}
+
+    .tc-head{padding:16px 16px;}
+    .tc-name{font-size:17px;}
+    .tc-body{padding:16px 16px 18px;}
+
+    .duty-badges{gap:6px;}
+    .badge{font-size:12px; padding:6px 10px;}
+
+    .kelas-chips{gap:6px;}
+    .chip{font-size:12.5px; padding:5px 9px;}
+
+    .total-summary .value{font-size:42px;}
+
+    .matrix-head{padding:16px 16px;}
+    .matrix-body{padding:16px 16px 18px;}
+    .kelas-guru-grid{grid-template-columns:1fr;}
+    .mm-title{font-size:17px;}
+
+    .mapel-chip-list{gap:6px;}
+    .mapel-pick{font-size:12.5px; padding:7px 12px;}
+  }
+
+  @media (max-width:360px){
+    .tab-btn{font-size:11.5px; padding:11px 6px;}
+    .total-summary .value{font-size:36px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <img class="school-logo" src="data:image/png;base64,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" alt="Logo UPTD SMAN 2 Majene">
+    <div class="eyebrow">Semester Ganjil · Tahun Ajaran 2026/2027</div>
+    <h1 class="site-title">Pembagian Tugas Guru</h1>
+    <p class="site-sub">UPTD SMAN 2 Majene</p>
+  </div>
+</header>
+
+<main>
+  <div class="tabs">
+    <button class="tab-btn active" id="tabGuru">🔎 Cari Guru</button>
+    <button class="tab-btn" id="tabMapel">📊 Matriks Mapel</button>
+  </div>
+
+  <!-- PANEL: CARI GURU -->
+  <div class="panel active" id="panelGuru">
+    <div class="search-card">
+      <label class="search-label" for="searchInput">Cari nama guru</label>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="searchInput" placeholder="Ketik nama, contoh: Muji atau Mujiadia" autocomplete="off">
+      </div>
+      <div class="hint">Boleh ketik sebagian nama saja — sistem akan mencari yang cocok.</div>
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <!-- PANEL: MATRIKS MAPEL -->
+  <div class="panel" id="panelMapel">
+    <div class="search-card">
+      <label class="search-label" for="mapelInput">Pilih mata pelajaran</label>
+      <div class="search-wrap mapel-select-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="mapelInput" placeholder="Ketik mapel, contoh: Kimia" autocomplete="off">
+      </div>
+      <div class="hint">Menampilkan semua guru pengajar mapel ini dari kelas X sampai XII, termasuk kelas peminatan.</div>
+      <div class="mapel-chip-list" id="mapelChipList"></div>
+    </div>
+
+    <div id="matrixResult"></div>
+  </div>
+</main>
+
+<footer class="site">
+  Data pembagian tugas guru · UPTD SMAN 2 Majene · Semester Ganjil 2026/2027
+</footer>
+
+<script>
+const TEACHERS = [{"nama": "Admawati Husain, S.Pd", "kode": ["Ina"], "wali_kelas": "XII 3", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bhs Indonesia", "kelas": [{"nama_kelas": "XII 1", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII Ina 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Ina 2", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 26}, {"nama": "Agustina, S.Pd.,M.Pd.", "kode": ["Mat"], "wali_kelas": "XII 4", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "XII 6", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 4, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Ahmad Jaelani, S.Pd.", "kode": ["Eko"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Ekonomi", "kelas": [{"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "XI 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 2, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Ahmad, S.Pd.I", "kode": ["Pai"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Pend. Agama Islam & BP", "kelas": [{"nama_kelas": "XII 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 3, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Aisyah, S.Sos", "kode": ["Sos"], "wali_kelas": "XII 2", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Sosiologi", "kelas": [{"nama_kelas": "XII Sos 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Sos 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Sos 3", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Sos 4", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Anita Mayang Sari,S.Pd", "kode": ["Ing"], "wali_kelas": "X 9", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bahasa Inggris", "kelas": [{"nama_kelas": "XI 3", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Anita, S.Pd.", "kode": ["Ina"], "wali_kelas": "XI 5", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bhs Indonesia", "kelas": [{"nama_kelas": "XI 8", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 4, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Arwinda, S.Pd.", "kode": ["Kim"], "wali_kelas": "X 2", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Kimia", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 5, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Asmadi, S.Pd", "kode": ["Pjo"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "PJOK", "kelas": [{"nama_kelas": "XI 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Benyamin B.R., S.Pd. M.A.", "kode": ["Fis"], "wali_kelas": null, "duties": ["Wakasek Kurikulum"], "mapel": [{"mapel": "Fisika", "kelas": [{"nama_kelas": "XII Fis 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Fis 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Fis 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 27}, {"nama": "Burhanuddin, S.Pd.", "kode": ["Ina"], "wali_kelas": "XI 1", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bhs Indonesia", "kelas": [{"nama_kelas": "XI 2", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 4, "tipe": "reguler"}]}], "total_jam": 30}, {"nama": "Dra. Hj. Suryani Latif,M.Pd.", "kode": ["Ing"], "wali_kelas": "XII 8", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bahasa Inggris", "kelas": [{"nama_kelas": "XII ING 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII ING 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII ING 3", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII ING 4", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Drs. Mahyuddin, M.Pd", "kode": ["Inf"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Informatika", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII TIK 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII TIK 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII TIK 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 25}, {"nama": "Drs. Muh. Gaus, M.M.", "kode": ["Ara"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Bhs Arab", "kelas": [{"nama_kelas": "XI 1", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Arab 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Arab 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Arab 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Drs. Muhtar Hadi, M.Pd.", "kode": [], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Mulok-BTQ", "kelas": [{"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 10}, {"nama": "Drs.Rusman Ruddin", "kode": ["Sej"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Projek X", "kelas": [{"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Sejarah", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Fadilah Ekayanti N., S.Pd., M.Hum.", "kode": ["Ing"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Bahasa Inggris", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "H.M.Ridwan, S.Pd.,M.Pd", "kode": ["Sej"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Projek XI", "kelas": [{"nama_kelas": "XI 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Sejarah", "kelas": [{"nama_kelas": "XI 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "H.Nasaruddin Anas, S.Pd", "kode": ["Sej"], "wali_kelas": null, "duties": ["Wakasek Sarana"], "mapel": [{"mapel": "Sejarah", "kelas": [{"nama_kelas": "XII 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII Sej 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Sej 2", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 26}, {"nama": "H.Saruna Abu, S.Pd.,M.Pd", "kode": ["Bio"], "wali_kelas": null, "duties": ["Kepala Lab"], "mapel": [{"mapel": "Biologi", "kelas": [{"nama_kelas": "XI 4", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 5, "tipe": "reguler"}]}], "total_jam": 27}, {"nama": "Haryadi Djailani, S.Pd", "kode": ["Pjo"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "PJOK", "kelas": [{"nama_kelas": "XII 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Hasniati, S.Pd.", "kode": ["Fis"], "wali_kelas": "X 4", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Fisika", "kelas": [{"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}]}], "total_jam": 32}, {"nama": "Hasniati, S.Pd., M.Pd.", "kode": ["Kim"], "wali_kelas": "XII 1", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Kimia", "kelas": [{"nama_kelas": "XI 5", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Kim 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Kim 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Kim 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Hasri, S.Si., M.Si", "kode": ["Mat"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "XII 1", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII Mat 3", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Mat 2", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Herlianty Tri Dimas Ayuningtyas", "kode": [], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Biologi", "kelas": [{"nama_kelas": "XII Bio 4", "jam": 5, "tipe": "peminatan"}]}, {"mapel": "Projek XII", "kelas": [{"nama_kelas": "XII 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 2, "tipe": "reguler"}]}], "total_jam": 13}, {"nama": "Hj. Erni, S.Pd", "kode": ["Eko"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Ekonomi", "kelas": [{"nama_kelas": "XI 6", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Eko 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Eko 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Eko 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 26}, {"nama": "Hj. Rita, S.Pd", "kode": ["Mat"], "wali_kelas": "XI 3", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "XI 3", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 4, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Hj. Rosmini, S.Pd", "kode": ["Pkn"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Pend. Pancasila", "kelas": [{"nama_kelas": "X 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 12}, {"nama": "Hj. Wahyuni,S.Pd.,M.Pd", "kode": ["Mat"], "wali_kelas": null, "duties": ["Perpustakaan"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "XII 4", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII Mat 1", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 25}, {"nama": "Husnaeni, S.Pd.I", "kode": ["Pai"], "wali_kelas": "X 3", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Mulok-BTQ", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Pend. Agama Islam & BP", "kelas": [{"nama_kelas": "XI 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 35}, {"nama": "Husniah, S.Pd", "kode": ["Mat"], "wali_kelas": "XI 2", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Informatika", "kelas": [{"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Matematika", "kelas": [{"nama_kelas": "XI 1", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 4, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Irfan,S.Pd", "kode": ["Sen"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Projek XI", "kelas": [{"nama_kelas": "XI 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Seni Budaya", "kelas": [{"nama_kelas": "XI 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Makhira, S.Ag., M.Sos.I", "kode": ["Pai"], "wali_kelas": "X 8", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Pend. Agama Islam & BP", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Marliah, S.Pd.I", "kode": ["Pai"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Mulok-BTQ", "kelas": [{"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Pend. Agama Islam & BP", "kelas": [{"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 3, "tipe": "reguler"}]}], "total_jam": 15}, {"nama": "Masita, S.Pd.,M.Pd", "kode": ["Sos"], "wali_kelas": "XI 8", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Sosiologi", "kelas": [{"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 5, "tipe": "reguler"}]}], "total_jam": 24}, {"nama": "Muammar K, S.Pd.,M.Hum", "kode": ["Ing"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Bahasa Inggris", "kelas": [{"nama_kelas": "XII 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 3, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Muh. Firman, S.Pd", "kode": ["Pkn"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Pend. Pancasila", "kelas": [{"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Projek XII", "kelas": [{"nama_kelas": "XII 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 2, "tipe": "reguler"}]}], "total_jam": 30}, {"nama": "Muh.Rusdy, S.Sos", "kode": ["Sos"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Sosiologi", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 5, "tipe": "reguler"}]}], "total_jam": 24}, {"nama": "Muhammad Ishaq, S.Pd", "kode": ["Sen"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Projek XII", "kelas": [{"nama_kelas": "XII 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Seni Budaya", "kelas": [{"nama_kelas": "XII 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Mujiadia Hamri,S.Pd.", "kode": ["Pra"], "wali_kelas": "XII 9", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Muslim, S.Ag.,M.M.", "kode": ["Ara"], "wali_kelas": null, "duties": ["Wakasek Sarana"], "mapel": [{"mapel": "Bhs Arab", "kelas": [{"nama_kelas": "XI 7", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 5, "tipe": "reguler"}]}], "total_jam": 27}, {"nama": "Nadirah, S.Pd", "kode": ["Ina"], "wali_kelas": "XII 6", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bhs Indonesia", "kelas": [{"nama_kelas": "XI 1", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 4, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Nahira, S.Pd.,M.M.", "kode": ["Eko"], "wali_kelas": "XI 9", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Ekonomi", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 5, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "XI 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 27}, {"nama": "Nurjannah Yunus, S.Pd.", "kode": [], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Bhs Indonesia", "kelas": [{"nama_kelas": "XI 6", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 4, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Nurjannah, S.Pd", "kode": ["Pai"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Mulok-BTQ", "kelas": [{"nama_kelas": "X 4", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Pend. Agama Islam & BP", "kelas": [{"nama_kelas": "XI 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 15}, {"nama": "Nurlaelah, S.Ag.", "kode": ["Bio"], "wali_kelas": "X 1", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Biologi", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}]}], "total_jam": 25}, {"nama": "Nurlailah, S.Pd", "kode": ["Ing"], "wali_kelas": "XI 6", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Bahasa Inggris", "kelas": [{"nama_kelas": "XI 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 29}, {"nama": "Nurliati, S.Pd.Bio.", "kode": ["Bio"], "wali_kelas": "XII 7", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Biologi", "kelas": [{"nama_kelas": "XI 2", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Bio 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Bio 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Bio 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Nurpaisah Wahab, S.Pd", "kode": ["Kim"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Informatika", "kelas": [{"nama_kelas": "X 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Kimia", "kelas": [{"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Pachruddin, S.Pd.", "kode": ["Pra"], "wali_kelas": "X 7", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "PJOK", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}], "total_jam": 31}, {"nama": "Prihatingsih, S.Pd", "kode": ["Geo"], "wali_kelas": "XI 7", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Geografi", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 6", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 5, "tipe": "reguler"}]}], "total_jam": 27}, {"nama": "Putri Aprilia Syamsul, S. Pd.", "kode": [], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Geografi", "kelas": [{"nama_kelas": "X 7", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Projek X", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 2, "tipe": "reguler"}]}], "total_jam": 19}, {"nama": "Ramlah, S.Pd", "kode": ["Fis"], "wali_kelas": "XI 4", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Fisika", "kelas": [{"nama_kelas": "X 1", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 5, "tipe": "reguler"}]}], "total_jam": 28}, {"nama": "Sidra Syarif", "kode": ["Eko"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Ekonomi", "kelas": [{"nama_kelas": "X 4", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "XI 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Projek XI", "kelas": [{"nama_kelas": "XI 7", "jam": 2, "tipe": "reguler"}]}], "total_jam": 18}, {"nama": "Sri Ikayanti, S.Pd", "kode": ["Mat"], "wali_kelas": "X 5", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "X 1", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 3", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 4", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 5", "jam": 4, "tipe": "reguler"}]}, {"mapel": "Projek X", "kelas": [{"nama_kelas": "X 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 30}, {"nama": "Sukmawati, S.Pd.,M.M.", "kode": ["Jer"], "wali_kelas": null, "duties": ["Wakasek Humas"], "mapel": [{"mapel": "Bhs. Jerman", "kelas": [{"nama_kelas": "XI 1", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Jer 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Jer 2", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Jer 3", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 37}, {"nama": "Supriadi, S.Pd", "kode": ["Sej"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Sejarah", "kelas": [{"nama_kelas": "XI 1", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 26}, {"nama": "Suriana, S.T.,M.Pd", "kode": ["Geo"], "wali_kelas": "XII 5", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Geografi", "kelas": [{"nama_kelas": "XI 4", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 5, "tipe": "reguler"}, {"nama_kelas": "XII Geo 1", "jam": 5, "tipe": "peminatan"}, {"nama_kelas": "XII Geo 2", "jam": 5, "tipe": "peminatan"}]}], "total_jam": 24}, {"nama": "Umrah, S.Pd", "kode": ["Mat"], "wali_kelas": "X 6", "duties": ["Guru Wali", "Wali Kelas"], "mapel": [{"mapel": "Matematika", "kelas": [{"nama_kelas": "X 6", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 7", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 8", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 4, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 4, "tipe": "reguler"}]}, {"mapel": "Projek XII", "kelas": [{"nama_kelas": "XII 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XII 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 30}, {"nama": "Urfa Rahman  S. Pd.", "kode": [], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Biologi", "kelas": [{"nama_kelas": "X 8", "jam": 3, "tipe": "reguler"}, {"nama_kelas": "X 9", "jam": 3, "tipe": "reguler"}]}, {"mapel": "Prakarya & KWU", "kelas": [{"nama_kelas": "XI 8", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Projek XI", "kelas": [{"nama_kelas": "XI 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 2, "tipe": "reguler"}]}], "total_jam": 18}, {"nama": "Yahya Bakri, S.Pd", "kode": ["Pkn"], "wali_kelas": null, "duties": ["Guru Wali"], "mapel": [{"mapel": "Pend. Pancasila", "kelas": [{"nama_kelas": "X 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "X 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 1", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 2", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 3", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 4", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 5", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 6", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 7", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 8", "jam": 2, "tipe": "reguler"}, {"nama_kelas": "XI 9", "jam": 2, "tipe": "reguler"}]}, {"mapel": "Projek X", "kelas": [{"nama_kelas": "X 7", "jam": 2, "tipe": "reguler"}]}], "total_jam": 28}]
+;
+
+const searchInput = document.getElementById('searchInput');
+const suggestionsBox = document.getElementById('suggestions');
+const resultBox = document.getElementById('result');
+
+const tabGuru = document.getElementById('tabGuru');
+const tabMapel = document.getElementById('tabMapel');
+const panelGuru = document.getElementById('panelGuru');
+const panelMapel = document.getElementById('panelMapel');
+const mapelInput = document.getElementById('mapelInput');
+const mapelChipList = document.getElementById('mapelChipList');
+const matrixResult = document.getElementById('matrixResult');
+
+function normalize(s){
+  return (s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function dutyBadge(duty){
+  let cls = 'none';
+  let icon = '•';
+  if(duty === 'Wali Kelas'){ cls='wali'; icon='🏫'; }
+  else if(duty === 'Guru Wali'){ cls='none'; icon='🤝'; }
+  else if(duty.startsWith('Wakasek')){ cls='wakasek'; icon='⭐'; }
+  else if(duty === 'Perpustakaan'){ cls='perpus'; icon='📚'; }
+  else if(duty === 'Kepala Lab'){ cls='lab'; icon='🔬'; }
+  return `<span class="badge ${cls}"><span>${icon}</span>${duty}</span>`;
+}
+
+function renderSuggestions(query){
+  const q = normalize(query);
+  if(!q){
+    suggestionsBox.innerHTML = '';
+    suggestionsBox.classList.remove('has-items');
+    return;
+  }
+  const matches = TEACHERS.filter(t => normalize(t.nama).includes(q)).slice(0, 8);
+  if(matches.length === 0){
+    suggestionsBox.innerHTML = '';
+    suggestionsBox.classList.remove('has-items');
+    return;
+  }
+  suggestionsBox.classList.add('has-items');
+  suggestionsBox.innerHTML = matches.map(t => {
+    const mapelList = [...new Set(t.mapel.map(m => m.mapel))].join(', ');
+    return `<div class="sugg-item" data-nama="${encodeURIComponent(t.nama)}">
+      <span>${highlightMatch(t.nama, query)}</span>
+      <span class="sugg-meta">${mapelList}</span>
+    </div>`;
+  }).join('');
+
+  suggestionsBox.querySelectorAll('.sugg-item').forEach(el => {
+    el.addEventListener('click', () => {
+      const nama = decodeURIComponent(el.getAttribute('data-nama'));
+      searchInput.value = nama;
+      suggestionsBox.innerHTML = '';
+      suggestionsBox.classList.remove('has-items');
+      showTeacher(nama);
+    });
+  });
+}
+
+function highlightMatch(nama, query){
+  const q = normalize(query);
+  const n = normalize(nama);
+  const idx = n.indexOf(q);
+  if(idx === -1 || !q) return nama;
+  return nama.slice(0, idx) + '<b>' + nama.slice(idx, idx + q.length) + '</b>' + nama.slice(idx + q.length);
+}
+
+function showTeacher(nama){
+  const t = TEACHERS.find(x => x.nama === nama);
+  if(!t){
+    resultBox.innerHTML = `<div class="empty-state"><div class="big">🔎</div>Guru tidak ditemukan. Coba ketik nama lain.</div>`;
+    return;
+  }
+
+  let duties = [...t.duties];
+  if(t.wali_kelas){
+    duties = duties.map(d => d === 'Wali Kelas' ? `Wali Kelas ${t.wali_kelas}` : d);
+  }
+  if(duties.length === 0){
+    duties = ['Tidak ada tugas tambahan'];
+  }
+
+  const mapelHtml = t.mapel.map(m => {
+    const chips = m.kelas.map(k => {
+      if(k.tipe === 'reguler'){
+        return `<span class="chip">${k.nama_kelas} <span class="jam">${k.jam} jp</span></span>`;
+      } else {
+        return `<span class="chip peminatan">${k.nama_kelas} <span class="jam">${k.jam} jp</span></span>`;
+      }
+    }).join('');
+    return `<div class="mapel-block">
+      <p class="mapel-name">${m.mapel}</p>
+      <div class="kelas-chips">${chips}</div>
+    </div>`;
+  }).join('');
+
+  resultBox.innerHTML = `
+    <div class="teacher-card">
+      <div class="tc-head">
+        <div>
+          <p class="tc-name">${t.nama}</p>
+          <span class="tc-code">${t.kode.join(', ') || '—'}</span>
+        </div>
+      </div>
+      <div class="tc-body">
+        <p class="section-title">Tugas tambahan</p>
+        <div class="duty-badges">${duties.map(dutyBadge).join('')}</div>
+
+        <p class="section-title">Mata pelajaran &amp; kelas</p>
+        ${mapelHtml}
+
+        <div class="total-summary">
+          <div class="label">Jumlah Jam Mengajar
+            <small>termasuk tugas tambahan</small>
+          </div>
+          <div class="value">${t.total_jam}<span>JP / minggu</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+searchInput.addEventListener('input', (e) => {
+  renderSuggestions(e.target.value);
+  if(!e.target.value.trim()){
+    resultBox.innerHTML = '';
+  }
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){
+    const q = normalize(searchInput.value);
+    const exact = TEACHERS.find(t => normalize(t.nama).includes(q));
+    if(exact){
+      searchInput.value = exact.nama;
+      suggestionsBox.innerHTML = '';
+      suggestionsBox.classList.remove('has-items');
+      showTeacher(exact.nama);
+    }
+  }
+});
+
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.search-card')){
+    suggestionsBox.innerHTML = '';
+    suggestionsBox.classList.remove('has-items');
+  }
+});
+
+/* ===== TAB SWITCHING ===== */
+tabGuru.addEventListener('click', () => {
+  tabGuru.classList.add('active');
+  tabMapel.classList.remove('active');
+  panelGuru.classList.add('active');
+  panelMapel.classList.remove('active');
+});
+tabMapel.addEventListener('click', () => {
+  tabMapel.classList.add('active');
+  tabGuru.classList.remove('active');
+  panelMapel.classList.add('active');
+  panelGuru.classList.remove('active');
+});
+
+/* ===== MATRIKS MAPEL ===== */
+function buildMapelIndex(){
+  const idx = {};
+  TEACHERS.forEach(t => {
+    t.mapel.forEach(m => {
+      if(!idx[m.mapel]) idx[m.mapel] = [];
+      m.kelas.forEach(k => {
+        idx[m.mapel].push({ kelas: k.nama_kelas, jam: k.jam, tipe: k.tipe, guru: t.nama });
+      });
+    });
+  });
+  return idx;
+}
+const MAPEL_INDEX = buildMapelIndex();
+const MAPEL_LIST = Object.keys(MAPEL_INDEX).sort((a, b) => a.localeCompare(b, 'id'));
+
+function tingkatOf(namaKelas){
+  if(/^XII\b/.test(namaKelas)) return 'XII';
+  if(/^XI\b/.test(namaKelas)) return 'XI';
+  if(/^X\b/.test(namaKelas)) return 'X';
+  return '';
+}
+function classSortKey(namaKelas){
+  const m = namaKelas.match(/(\d+)\s*$/);
+  return m ? parseInt(m[1], 10) : 999;
+}
+
+function renderMapelChips(filter = ''){
+  const q = normalize(filter);
+  const list = q ? MAPEL_LIST.filter(m => normalize(m).includes(q)) : MAPEL_LIST;
+  if(list.length === 0){
+    mapelChipList.innerHTML = `<span class="hint">Mapel tidak ditemukan.</span>`;
+    return;
+  }
+  mapelChipList.innerHTML = list.map(m =>
+    `<span class="mapel-pick" data-mapel="${encodeURIComponent(m)}">${m}</span>`
+  ).join('');
+  mapelChipList.querySelectorAll('.mapel-pick').forEach(el => {
+    el.addEventListener('click', () => {
+      const mapel = decodeURIComponent(el.getAttribute('data-mapel'));
+      mapelInput.value = mapel;
+      showMapelMatrix(mapel);
+      mapelChipList.querySelectorAll('.mapel-pick').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+    });
+  });
+}
+
+function showMapelMatrix(mapel){
+  const entries = MAPEL_INDEX[mapel];
+  if(!entries){
+    matrixResult.innerHTML = `<div class="empty-state"><div class="big">🔎</div>Mapel tidak ditemukan. Pilih dari daftar di atas.</div>`;
+    return;
+  }
+
+  const groups = { X: [], XI: [], XII: [] };
+  entries.forEach(e => {
+    const t = tingkatOf(e.kelas);
+    if(groups[t]) groups[t].push(e);
+  });
+  ['X', 'XI', 'XII'].forEach(t => {
+    groups[t].sort((a, b) => {
+      if(a.tipe !== b.tipe) return a.tipe === 'reguler' ? -1 : 1;
+      return classSortKey(a.kelas) - classSortKey(b.kelas) || a.kelas.localeCompare(b.kelas);
+    });
+  });
+
+  const groupHtml = ['X', 'XI', 'XII'].map(t => {
+    if(groups[t].length === 0) return '';
+    const rows = groups[t].map(e => `
+      <div class="kg-row ${e.tipe === 'peminatan' ? 'peminatan' : ''}">
+        <div class="kg-kelas">${e.kelas}${e.tipe === 'peminatan' ? ' · peminatan' : ''}</div>
+        <div class="kg-guru">${e.guru}</div>
+        <div class="kg-jam">${e.jam} JP</div>
+      </div>
+    `).join('');
+    return `<div class="tingkat-group">
+      <p class="tingkat-label">Kelas ${t}</p>
+      <div class="kelas-guru-grid">${rows}</div>
+    </div>`;
+  }).join('');
+
+  const totalKelas = entries.length;
+  const totalGuru = new Set(entries.map(e => e.guru)).size;
+
+  matrixResult.innerHTML = `
+    <div class="matrix-card">
+      <div class="matrix-head">
+        <p class="mm-title">${mapel}</p>
+        <p class="mm-sub">${totalKelas} kelas diajar · ${totalGuru} guru pengampu</p>
+      </div>
+      <div class="matrix-body">
+        ${groupHtml}
+      </div>
+    </div>
+  `;
+}
+
+mapelInput.addEventListener('input', (e) => {
+  renderMapelChips(e.target.value);
+  if(!e.target.value.trim()){
+    matrixResult.innerHTML = '';
+  }
+});
+
+mapelInput.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){
+    const q = normalize(mapelInput.value);
+    const exact = MAPEL_LIST.find(m => normalize(m).includes(q));
+    if(exact){
+      mapelInput.value = exact;
+      showMapelMatrix(exact);
+      renderMapelChips(exact);
+      mapelChipList.querySelectorAll('.mapel-pick').forEach(c => {
+        c.classList.toggle('active', c.textContent === exact);
+      });
+    }
+  }
+});
+
+renderMapelChips();
+</script>
+</body>
+</html>
